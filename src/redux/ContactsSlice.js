@@ -1,29 +1,50 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { nanoid } from '@reduxjs/toolkit';
-import { loadFromMockStorage } from 'MockStorageHandlers/MockStorageHandlers';
-
+import {
+  loadContacts,
+  addContact,
+  deleteContact,
+} from 'MockStorageHandlers/MockStorageHandlers';
+const handlePending = state => {
+  state.isLoading = true;
+};
+const handleRejected = (state, action) => {
+  state.isLoading = false;
+  state.error = action.payload;
+};
 const contactsSlice = createSlice({
   name: 'contacts',
   initialState: {
-    contacts: [],
+    items: [],
     isLoading: false,
     error: null,
   },
   extraReducers: {
-    [loadFromMockStorage.pending](state) {
-      state.isLoading = true;
-    },
-    [loadFromMockStorage.fulfilled](state, action) {
+    [loadContacts.pending]: handlePending,
+    [addContact.pending]: handlePending,
+    [deleteContact.pending]: handlePending,
+    [loadContacts.rejected]: handleRejected,
+    [addContact.rejected]: handleRejected,
+    [deleteContact.rejected]: handleRejected,
+
+    [loadContacts.fulfilled](state, action) {
       state.isLoading = false;
       state.error = null;
-      state.contacts = action.payload;
+      state.items = action.payload;
     },
-    [loadFromMockStorage.rejected](state, action) {
+    [addContact.fulfilled](state, action) {
       state.isLoading = false;
-      state.error = action.payload;
+      state.error = null;
+      state.items.push(action.payload);
+    },
+    [deleteContact.fulfilled](state, action) {
+      state.isLoading = false;
+      state.error = null;
+      const index = state.items.findIndex(
+        contact => contact.id === action.payload.id
+      );
+      state.items.splice(index, 1);
     },
   },
 });
 
-export const { addContactAction, deleteContactAction } = contactsSlice.actions;
 export const contactsReducer = contactsSlice.reducer;

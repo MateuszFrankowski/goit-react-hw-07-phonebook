@@ -1,25 +1,26 @@
 import css from './PhoneBookForm.module.css';
 //import { addContactAction } from 'redux/Actions';
-import { addContactAction } from 'redux/ContactsSlice';
-import { useDispatch, useSelector } from 'react-redux';
 
+import { addContact } from 'MockStorageHandlers/MockStorageHandlers';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/Selectors';
 import { nanoid } from 'nanoid';
 import React from 'react';
 export const ContactForm = () => {
   const dispatch = useDispatch();
-  const phoneBookContacts = useSelector(state => state.contacts);
+  const contacts = useSelector(getContacts);
   const nameInputId = nanoid();
   const telInputId = nanoid();
   const handleSubmit = evt => {
     evt.preventDefault();
     const form = evt.target;
     const { name, number } = form.elements;
-    if (phoneBookContacts) {
-      if (phoneBookContacts.find(element => element.name === name.value)) {
+    if (contacts) {
+      if (contacts.find(element => element.name === name.value)) {
         return alert(name.value + ' is already in contacts');
       }
     }
-    dispatch(addContactAction(name.value, number.value));
+    dispatch(addContact({ name: name.value, number: number.value }));
     form.reset();
   };
 

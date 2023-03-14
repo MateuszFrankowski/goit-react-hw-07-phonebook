@@ -1,19 +1,18 @@
 import css from './ContactsList.module.css';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-// import { deleteContactAction } from 'redux/Actions';
-import { deleteContactAction } from 'redux/ContactsSlice';
+import { getContacts } from 'redux/Selectors';
+import { deleteContact } from 'MockStorageHandlers/MockStorageHandlers';
 export const ContactsList = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+  const handleDelete = id => dispatch(deleteContact(id));
   const filt = useSelector(state => state.filter);
-  console.log('filt', filt);
-  const phoneBookContacts = useSelector(state => state.contacts);
-  const phoneContacts = !!filt
-    ? phoneBookContacts.filter(contact =>
-        contact.name.toLowerCase().includes(filt.toLowerCase())
-      )
-    : phoneBookContacts;
-  const handleDeleteContact = id => dispatch(deleteContactAction(id));
+  console.log(contacts, 'contacts');
+  // const phoneContacts = contacts.filter(contact =>
+  //   contact.name.toLowerCase().includes(filt.toLowerCase())
+  // );
+  const phoneContacts = contacts;
   return (
     <>
       <h2 className={css['contacts-title']}>Contacts</h2>
@@ -25,7 +24,7 @@ export const ContactsList = () => {
             <button
               className={css.button}
               id={contact.name}
-              onClick={() => handleDeleteContact(contact.id)}
+              onClick={() => handleDelete(contact.id)}
             >
               delete
             </button>
