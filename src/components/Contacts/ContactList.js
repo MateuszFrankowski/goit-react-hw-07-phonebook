@@ -8,11 +8,11 @@ export const ContactsList = () => {
   const contacts = useSelector(getContacts);
   const handleDelete = id => dispatch(deleteContact(id));
   const filt = useSelector(state => state.filter);
-  console.log(contacts, 'contacts');
-  // const phoneContacts = contacts.filter(contact =>
-  //   contact.name.toLowerCase().includes(filt.toLowerCase())
-  // );
-  const phoneContacts = contacts;
+
+  const phoneContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filt.toLowerCase())
+  );
+
   return (
     <>
       <h2 className={css['contacts-title']}>Contacts</h2>
