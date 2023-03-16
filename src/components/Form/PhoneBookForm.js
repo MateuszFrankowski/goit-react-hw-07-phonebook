@@ -1,6 +1,5 @@
 import css from './PhoneBookForm.module.css';
-//import { addContactAction } from 'redux/Actions';
-
+import { getFilter } from 'redux/Selectors';
 import { addContact } from 'MockStorageHandlers/MockStorageHandlers';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContacts } from 'redux/Selectors';
@@ -9,6 +8,7 @@ import React from 'react';
 export const ContactForm = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
   const nameInputId = nanoid();
   const telInputId = nanoid();
   const handleSubmit = evt => {
@@ -22,6 +22,8 @@ export const ContactForm = () => {
     }
     dispatch(addContact({ name: name.value, number: number.value }));
     form.reset();
+    const input = document.getElementsByName('filter');
+    input.value = filter;
   };
 
   return (
